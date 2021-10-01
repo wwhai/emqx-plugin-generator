@@ -1,0 +1,12 @@
+{application, emqx_plugin_{{.PluginName}},
+ [{description, "EMQ X Plugin {{.PluginName}}"},
+  {vsn, "git"},
+  {modules, []},
+  {registered, [emqx_plugin_{{.PluginName}}_sup]},
+  {applications, [kernel,stdlib]},
+  {mod, {emqx_plugin_{{.PluginName}}_app,[]}},
+  {env, []},
+  {licenses, ["Apache-2.0"]},
+  {maintainers, ["Your maintainers for:{{.PluginName}}"]},
+  {links, [{"Homepage", "Your homepage"}]}
+ ]}.
