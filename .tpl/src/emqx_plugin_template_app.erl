@@ -14,7 +14,7 @@
 %% limitations under the License.
 %%--------------------------------------------------------------------
 
--module(emqx_plugin_{{.PluginName}}_app).
+-module(emqx_{{.PluginName}}_app).
 
 -behaviour(application).
 
@@ -25,10 +25,10 @@
         ]).
 
 start(_StartType, _StartArgs) ->
-    {ok, Sup} = emqx_plugin_{{.PluginName}}_sup:start_link(),
-    emqx_plugin_{{.PluginName}}:load(application:get_all_env()),
+    {ok, Sup} = emqx_{{.PluginName}}_sup:start_link(),
+    emqx_{{.PluginName}}:load(application:get_all_env()),
     {ok, Sup}.
 
 stop(_State) ->
-    emqx_plugin_{{.PluginName}}:unload().
+    emqx_{{.PluginName}}:unload().
 

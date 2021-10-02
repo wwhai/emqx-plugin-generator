@@ -31,7 +31,7 @@ func main() {
 		".tpl/LICENSE",
 		".tpl/README.md",
 	}
-	distPath := "./dist/emqx_" + newPluginName+"_plugin"
+	distPath := "./dist/emqx_" + newPluginName
 	os.RemoveAll(distPath)
 	for _, fileName := range templates {
 		t, err := template.ParseFiles(fileName)
@@ -51,7 +51,7 @@ func main() {
 		os.MkdirAll(distPath+"/test", permission)
 		fmt.Println("创建插件目录结构完成")
 
-		distFileName := strings.Replace(strings.Replace(fileName, "template", newPluginName, 1), ".tpl", "", 1)
+		distFileName := strings.Replace(strings.Replace(strings.Replace(fileName, "template", newPluginName, 1), ".tpl", "", 1), "_plugin_", "_", 1)
 		destFile, err := os.OpenFile(distPath+"/"+distFileName, os.O_CREATE, permission)
 		if err != nil {
 			fmt.Println("插件生成失败,错误信息:", err.Error())

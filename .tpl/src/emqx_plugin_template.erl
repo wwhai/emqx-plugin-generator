@@ -14,7 +14,7 @@
 %% limitations under the License.
 %%--------------------------------------------------------------------
 
--module(emqx_plugin_{{.PluginName}}).
+-module(emqx_{{.PluginName}}).
 
 -include("emqx.hrl").
 
