@@ -31,7 +31,7 @@ func main() {
 		".tpl/LICENSE",
 		".tpl/README.md",
 	}
-	distPath := "./dist/" + newPluginName
+	distPath := "./dist/emqx_" + newPluginName+"_plugin"
 	os.RemoveAll(distPath)
 	for _, fileName := range templates {
 		t, err := template.ParseFiles(fileName)
