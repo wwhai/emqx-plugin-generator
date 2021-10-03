@@ -16,7 +16,8 @@
 
 -module(emqx_{{.PluginName}}).
 
--include("emqx.hrl").
+-include_lib("emqx/include/emqx.hrl").
+-include_lib("emqx/include/logger.hrl").
 
 -export([ load/1
         , unload/0
