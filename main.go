@@ -52,7 +52,7 @@ func main() {
 		fmt.Println("创建插件目录结构完成")
 
 		distFileName := strings.Replace(strings.Replace(strings.Replace(fileName, "template", newPluginName, 1), ".tpl", "", 1), "_plugin_", "_", 1)
-		destFile, err := os.OpenFile(distPath+"/"+distFileName, os.O_CREATE, permission)
+		destFile, err := os.OpenFile(distPath+distFileName, os.O_CREATE, permission)
 		if err != nil {
 			fmt.Println("插件生成失败,错误信息:", err.Error())
 			return
