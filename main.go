@@ -20,7 +20,6 @@ func main() {
 	templates := []string{
 		".tpl/etc/emqx_plugin_template.conf",
 		".tpl/priv/emqx_plugin_template.schema",
-		".tpl/src/emqx_plugin_template_cli.erl",
 		".tpl/src/emqx_plugin_template.app.src",
 		".tpl/src/emqx_plugin_template.erl",
 		".tpl/src/emqx_plugin_template_app.erl",
@@ -33,6 +32,14 @@ func main() {
 	}
 	distPath := "./dist/emqx_" + newPluginName
 	os.RemoveAll(distPath)
+	var permission os.FileMode = os.ModePerm
+	fmt.Println("正在创建插件目录结构")
+	fmt.Println("==> ", os.MkdirAll(distPath+"/etc", permission))
+	fmt.Println("==> ", os.MkdirAll(distPath+"/src", permission))
+	fmt.Println("==> ", os.MkdirAll(distPath+"/priv", permission))
+	fmt.Println("==> ", os.MkdirAll(distPath+"/test", permission))
+	fmt.Println("创建插件目录结构完成")
+
 	for _, fileName := range templates {
 		t, err := template.ParseFiles(fileName)
 		if err != nil {
@@ -42,25 +49,20 @@ func main() {
 		type Plugin struct {
 			PluginName string
 		}
-
-		fmt.Println("正在创建插件目录结构")
-		var permission os.FileMode = 755
-		os.MkdirAll(distPath+"/etc", permission)
-		os.MkdirAll(distPath+"/src", permission)
-		os.MkdirAll(distPath+"/priv", permission)
-		os.MkdirAll(distPath+"/test", permission)
-		fmt.Println("创建插件目录结构完成")
-
 		distFileName := strings.Replace(strings.Replace(strings.Replace(fileName, "template", newPluginName, 1), ".tpl", "", 1), "_plugin_", "_", 1)
-		destFile, err := os.OpenFile(distPath+distFileName, os.O_CREATE, permission)
+		destFile, err := os.OpenFile(distPath+distFileName, os.O_CREATE|os.O_APPEND|os.O_WRONLY, permission)
 		if err != nil {
-			fmt.Println("插件生成失败,错误信息:", err.Error())
+			fmt.Println("XXX 插件生成失败 1, 错误信息:", err.Error())
 			return
 		}
 		defer destFile.Close()
-		fmt.Println("文件生成中:", destFile.Name())
-		t.Execute(destFile, &Plugin{newPluginName})
-		fmt.Println("文件生成完成:", destFile.Name())
+
+		fmt.Println("==> 文件生成中:", destFile.Name())
+		if err := t.Execute(destFile, &Plugin{newPluginName}); err != nil {
+			fmt.Println("XXX 插件生成失败 2, 错误信息:", err.Error())
+			return
+		}
+		fmt.Println("==> 文件生成完成:", destFile.Name())
 
 	}
 	fmt.Println("||")
