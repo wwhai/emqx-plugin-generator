@@ -32,3 +32,10 @@ rebar.config
 src
 test
 ```
+
+## 作者
+- wwhai
+
+## 社区
+- QQ群：475512169
+- 博客：https://wwhai.github.io

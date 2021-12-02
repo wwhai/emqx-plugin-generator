@@ -1,5 +1,5 @@
 {application, emqx_{{.PluginName}},
- [{description, "EMQ X Plugin {{.PluginName}}"},
+ [{description, "EMQX Plugin {{.PluginName}}"},
   {vsn, "git"},
   {modules, []},
   {registered, [emqx_{{.PluginName}}_sup]},
@@ -7,6 +7,6 @@
   {mod, {emqx_{{.PluginName}}_app,[]}},
   {env, []},
   {licenses, ["Apache-2.0"]},
-  {maintainers, ["Your maintainers for:{{.PluginName}}"]},
-  {links, [{"Homepage", "Your homepage"}]}
+  {maintainers, ["cnwwhai@gmail.com"]},
+  {links, [{"Homepage", "https://github.com/wwhai"}]}
  ]}.
