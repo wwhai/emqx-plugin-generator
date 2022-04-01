@@ -5,20 +5,17 @@
 
 ## 使用
 ```sh
-gen_{win/xx} {插件名}
+plugingen {插件名}
 ```
 
 例如：
 ```sh
-# win
-gen_win demo_plugin
-# linux
-gen_xx demo_plugin
+plugingen demo_plugin
 ```
 
 或者自己构建工具:
 ```sh
-go build -o gen
+go build
 ```
 
 生成后的插件在 `dist` 目录下,文件结构如下:
