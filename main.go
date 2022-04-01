@@ -12,7 +12,7 @@ func main() {
 	args := os.Args
 	if len(args) != 2 {
 		fmt.Println("-----------------------------------------------------------")
-		fmt.Println("%   Usage: newplugin {name}, like 'newplugin demo_plugin'")
+		fmt.Println("%   Usage: plugingen {name}, eg: 'plugingen demo_plugin'")
 		fmt.Println("-----------------------------------------------------------")
 		return
 	}
@@ -30,7 +30,11 @@ func main() {
 		".tpl/LICENSE",
 		".tpl/README.md",
 	}
-	distPath := "./dist/emqx_" + newPluginName
+	if len(newPluginName) < 1 {
+		fmt.Println("插件名不可为空字符串")
+		return
+	}
+	distPath := "./dist/" + newPluginName
 	os.RemoveAll(distPath)
 	var permission os.FileMode = os.ModePerm
 	fmt.Println("正在创建插件目录结构")

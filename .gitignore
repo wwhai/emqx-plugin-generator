@@ -19,3 +19,6 @@ test/ct.cover.spec
 .rebar3
 /.idea/
 dist/
+*.exe
+plugingen
+rebar3

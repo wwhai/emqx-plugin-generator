@@ -34,28 +34,38 @@
         , on_message_acked/3
         , on_message_dropped/4
         ]).
+hooks() ->
+    [{'client.connect'      ,{?MODULE, on_client_connect}},
+     {'client.connack'      ,{?MODULE, on_client_connack}},
+     {'client.connected'    ,{?MODULE, on_client_connected}},
+     {'client.disconnected' ,{?MODULE, on_client_disconnected}},
+     {'client.authenticate' ,{?MODULE, on_client_authenticate}},
+     {'client.check_acl'    ,{?MODULE, on_client_check_acl}},
+     {'client.subscribe'    ,{?MODULE, on_client_subscribe}},
+     {'client.unsubscribe'  ,{?MODULE, on_client_unsubscribe}},
+     {'session.created'     ,{?MODULE, on_session_created}},
+     {'session.subscribed'  ,{?MODULE, on_session_subscribed}},
+     {'session.unsubscribed',{?MODULE, on_session_unsubscribed}},
+     {'session.resumed'     ,{?MODULE, on_session_resumed}},
+     {'session.discarded'   ,{?MODULE, on_session_discarded}},
+     {'session.takeovered'  ,{?MODULE, on_session_takeovered}},
+     {'session.terminated'  ,{?MODULE, on_session_terminated}},
+     {'message.publish'     ,{?MODULE, on_message_publish}},
+     {'message.delivered'   ,{?MODULE, on_message_delivered}},
+     {'message.acked'       ,{?MODULE, on_message_acked}},
+     {'message.dropped'     ,{?MODULE, on_message_dropped}}].
 
 %% Called when the plugin application start
 load(Env) ->
-    emqx:hook('client.connect',      {?MODULE, on_client_connect, [Env]}),
-    emqx:hook('client.connack',      {?MODULE, on_client_connack, [Env]}),
-    emqx:hook('client.connected',    {?MODULE, on_client_connected, [Env]}),
-    emqx:hook('client.disconnected', {?MODULE, on_client_disconnected, [Env]}),
-    emqx:hook('client.authenticate', {?MODULE, on_client_authenticate, [Env]}),
-    emqx:hook('client.check_acl',    {?MODULE, on_client_check_acl, [Env]}),
-    emqx:hook('client.subscribe',    {?MODULE, on_client_subscribe, [Env]}),
-    emqx:hook('client.unsubscribe',  {?MODULE, on_client_unsubscribe, [Env]}),
-    emqx:hook('session.created',     {?MODULE, on_session_created, [Env]}),
-    emqx:hook('session.subscribed',  {?MODULE, on_session_subscribed, [Env]}),
-    emqx:hook('session.unsubscribed',{?MODULE, on_session_unsubscribed, [Env]}),
-    emqx:hook('session.resumed',     {?MODULE, on_session_resumed, [Env]}),
-    emqx:hook('session.discarded',   {?MODULE, on_session_discarded, [Env]}),
-    emqx:hook('session.takeovered',  {?MODULE, on_session_takeovered, [Env]}),
-    emqx:hook('session.terminated',  {?MODULE, on_session_terminated, [Env]}),
-    emqx:hook('message.publish',     {?MODULE, on_message_publish, [Env]}),
-    emqx:hook('message.delivered',   {?MODULE, on_message_delivered, [Env]}),
-    emqx:hook('message.acked',       {?MODULE, on_message_acked, [Env]}),
-    emqx:hook('message.dropped',     {?MODULE, on_message_dropped, [Env]}).
+    lists:map(fun ({HookName, {Module, HookFunc}}) ->
+        emqx:hook(HookName, {Module, HookFunc, [Env]})
+    end, hooks()).
+
+%% Called when the plugin application stop
+unload() ->
+    lists:map(fun ({HookName, {Module, HookFunc}}) ->
+        emqx:unhook(HookName, {Module, HookFunc})
+    end, hooks()).
 
 %%--------------------------------------------------------------------
 %% Client Lifecircle Hooks
@@ -148,26 +158,3 @@ on_message_delivered(_ClientInfo = #{clientid := ClientId}, Message, _Env) ->
 on_message_acked(_ClientInfo = #{clientid := ClientId}, Message, _Env) ->
     io:format("Message acked by client(~s): ~s~n",
               [ClientId, emqx_message:format(Message)]).
-
-%% Called when the plugin application stop
-unload() ->
-    emqx:unhook('client.connect',      {?MODULE, on_client_connect}),
-    emqx:unhook('client.connack',      {?MODULE, on_client_connack}),
-    emqx:unhook('client.connected',    {?MODULE, on_client_connected}),
-    emqx:unhook('client.disconnected', {?MODULE, on_client_disconnected}),
-    emqx:unhook('client.authenticate', {?MODULE, on_client_authenticate}),
-    emqx:unhook('client.check_acl',    {?MODULE, on_client_check_acl}),
-    emqx:unhook('client.subscribe',    {?MODULE, on_client_subscribe}),
-    emqx:unhook('client.unsubscribe',  {?MODULE, on_client_unsubscribe}),
-    emqx:unhook('session.created',     {?MODULE, on_session_created}),
-    emqx:unhook('session.subscribed',  {?MODULE, on_session_subscribed}),
-    emqx:unhook('session.unsubscribed',{?MODULE, on_session_unsubscribed}),
-    emqx:unhook('session.resumed',     {?MODULE, on_session_resumed}),
-    emqx:unhook('session.discarded',   {?MODULE, on_session_discarded}),
-    emqx:unhook('session.takeovered',  {?MODULE, on_session_takeovered}),
-    emqx:unhook('session.terminated',  {?MODULE, on_session_terminated}),
-    emqx:unhook('message.publish',     {?MODULE, on_message_publish}),
-    emqx:unhook('message.delivered',   {?MODULE, on_message_delivered}),
-    emqx:unhook('message.acked',       {?MODULE, on_message_acked}),
-    emqx:unhook('message.dropped',     {?MODULE, on_message_dropped}).
-
