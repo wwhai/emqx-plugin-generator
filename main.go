@@ -34,7 +34,7 @@ func main() {
 		fmt.Println("插件名不可为空字符串")
 		return
 	}
-	distPath := "./dist/" + newPluginName
+	distPath := "./dist/emqx_" + newPluginName
 	os.RemoveAll(distPath)
 	var permission os.FileMode = os.ModePerm
 	fmt.Println("正在创建插件目录结构")
